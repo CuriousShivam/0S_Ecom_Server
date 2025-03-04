@@ -3,29 +3,6 @@ const router = express.Router();
 const bcrypt = require("bcryptjs");
 const User = require("../models/User");
 
-// Login Api
-router.post("/login", async (req, res) => {
-  try {
-    const { email, password } = req.body;
-
-    // Check if user exists
-    let user = await User.findOne({ email });
-    if (!user) {
-      return res.status(400).json({ message: "User not found" });
-    }
-
-    // Check password
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
-      return res.status(400).json({ message: "Invalid credentials" });
-    }
-
-    res.status(200).json({ message: "Login successful" });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Server error" });
-  }
-});
 
 // Signup API
 router.post("/signup", async (req, res) => {
@@ -55,6 +32,32 @@ router.post("/signup", async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 });
+
+
+// Login Api
+router.post("/login", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if user exists
+    let user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({ message: "User not found" });
+    }
+
+    // Check password
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+      return res.status(400).json({ message: "Invalid credentials" });
+    }
+
+    res.status(200).json({ message: "Login successful" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
 
 // Update user details API
 router.put("/update", async (req, res) => {
@@ -100,6 +103,7 @@ router.put("/update", async (req, res) => {
   }
 });
 
+
 router.post("/userinfo", async (req, res) => {
   try {
     // Extract User from Post Request
@@ -110,6 +114,7 @@ router.post("/userinfo", async (req, res) => {
     res.send(user);
   } catch (error) {
     res.status(404).json({ message: error });
+    
   }
 });
 
