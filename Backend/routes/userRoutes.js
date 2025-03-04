@@ -32,7 +32,7 @@ router.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log(email, password)
+    // console.log(email, password)
     // 1️ Check if user already exists
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "User already exists" });
@@ -49,11 +49,9 @@ router.post("/signup", async (req, res) => {
 
     // 4️ Save user to database
     await user.save();
-    
-    res.status(201).json({ message: "User registered successfully" });
 
+    res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
-    console.error("hellosda");
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -61,7 +59,18 @@ router.post("/signup", async (req, res) => {
 // Update user details API
 router.put("/update", async (req, res) => {
   try {
-    const { email, fullName, phoneNumber, addressType, street, locality, city, state, country, postalCode } = req.body;
+    const {
+      email,
+      fullName,
+      phoneNumber,
+      addressType,
+      street,
+      locality,
+      city,
+      state,
+      country,
+      postalCode,
+    } = req.body;
 
     // Find user by email
     let user = await User.findOne({ email });
@@ -77,18 +86,31 @@ router.put("/update", async (req, res) => {
       city: city || user.address.city,
       state: state || user.address.state,
       country: country || user.address.country,
-      postalCode: postalCode || user.address.postalCode
+      postalCode: postalCode || user.address.postalCode,
     };
 
     await user.save();
 
-    res.status(200).json({ message: "User details updated successfully", user });
-
+    res
+      .status(200)
+      .json({ message: "User details updated successfully", user });
   } catch (error) {
     console.error("Error updating user details:", error);
     res.status(500).json({ message: "Server error" });
   }
 });
 
+router.post("/userinfo", async (req, res) => {
+  try {
+    // Extract User from Post Request
+    const { email } = req.body;
+
+    let user = await User.findOne({ email });
+    if (!user) return res.status(400).json({ message: "User not found" });
+    res.send(user);
+  } catch (error) {
+    res.status(404).json({ message: error });
+  }
+});
 
 module.exports = router;
