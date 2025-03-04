@@ -8,7 +8,14 @@ const app = express();
 
 // Middleware
 app.use(express.json());
-app.use(cors())
+
+const corsOptions = {
+  origin: "*",
+  credentials: true,
+  optionSuccessStatus: 200,
+};
+
+app.use(cors(corsOptions))
 // app.use(cors({ origin: "https://your-vercel-app.vercel.app" }));
 
 // Connect to MongoDB Atlas
@@ -24,6 +31,7 @@ app.get('/', (req, res) => {
 
 // User Routes
 app.use("/api/users", userRoutes);
+// app.use("/api/product", productRoutes);
 
 // Start Server
 const PORT = process.env.PORT || 5000;
