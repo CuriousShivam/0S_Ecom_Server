@@ -32,6 +32,7 @@ router.post("/signup", async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    console.log(email, password)
     // 1️ Check if user already exists
     let user = await User.findOne({ email });
     if (user) return res.status(400).json({ message: "User already exists" });
@@ -52,7 +53,7 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({ message: "User registered successfully" });
 
   } catch (error) {
-    console.error(error);
+    console.error("hellosda");
     res.status(500).json({ message: "Server error" });
   }
 });
